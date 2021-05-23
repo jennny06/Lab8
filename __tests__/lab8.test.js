@@ -28,12 +28,14 @@ describe('Basic user flow for SPA ', () => {
   }, 30000);
 
   it('Test3: Clicking first <journal-entry>, new URL should contain /#entry1', async () => {
+    
     // implement test3: Clicking on the first journal entry should update the URL to contain “/#entry1”
-    const entries = await page.$$('journal-entry');
-    await entries[0].click();
-    const page_url = page.url();
+    const entry = await page.$$('journal-entry');
+    await entry[0].click();
+    await page.waitForNavigation();
+    const url_ = await page.url();  
 
-    expect(page_url).toBe('http://127.0.0.1:5500/#entry1');
+    expect(url_).toBe('http://127.0.0.1:5500/#entry1');
   });
 
   it('Test4: On first Entry page - checking page header title', async () => {
@@ -78,48 +80,136 @@ describe('Basic user flow for SPA ', () => {
 
   it('Test7: Clicking the settings icon, new URL should contain #settings', async () => {
     // implement test7: Clicking on the settings icon should update the URL to contain “/#settings”
+    await page.click('header > img');
+    const url_ = page.url();
+
+    expect(url_).toBe('http://127.0.0.1:5500/#settings');
 
   });
 
   it('Test8: On Settings page - checking page header title', async () => {
     // implement test8: Clicking on the settings icon should update the header to be “Settings”
+    const page_title = await page.$eval('h1', en => en.textContent);
 
+    expect(page_title).toBe("Settings");
   });
 
   it('Test9: On Settings page - checking <body> element classes', async () => {
     // implement test9: Clicking on the settings icon should update the class attribute of <body> to ‘settings’
+    const classes = await page.$eval('body', en => en.className);
 
+    expect(classes).toBe('settings');
   });
 
   it('Test10: Clicking the back button, new URL should be /#entry1', async() => {
     // implement test10: Clicking on the back button should update the URL to contain ‘/#entry1’
+    await page.goBack();
+    const url_ = page.url();
 
+    expect(url_).toBe('http://127.0.0.1:5500/#entry1');
   });
 
   // define and implement test11: Clicking the back button once should bring the user back to the home page
+  it('Test11: Clicking the back button, new URL should be home page', async() => {
+    await page.goBack();
+    const url_ = page.url();
 
-
+    expect(url_).toBe('http://127.0.0.1:5500/');
+  });
   // define and implement test12: When the user if on the homepage, the header title should be “Journal Entries”
+  it('Test12: When the user if on the homepage, the header title should be “Journal Entries', async() => {
+    const page_title = await page.$eval('h1', en => en.textContent);
 
+    expect(page_title).toBe('Journal Entries');
+  });
 
   // define and implement test13: On the home page the <body> element should not have any class attribute 
+  it('Test13: On the home page the <body> element should not have any class attribute', async () => {
+    const classes = await page.$eval('body', en => en.className);
 
+    expect(classes).toBe('');
+  });
 
   // define and implement test14: Verify the url is correct when clicking on the second entry
+  it('Test14: Verify the url is correct when clicking on the second entry', async () => {
+    
+    const entry = await page.$$('journal-entry');
+    await entry[1].click();
+    await page.waitForNavigation();
+    const url_ = await page.url();  
+
+
+    expect(url_).toBe('http://127.0.0.1:5500/#entry2');
+  });
 
 
   // define and implement test15: Verify the title is current when clicking on the second entry
+  it('Test15: Verify the title is current when clicking on the second entry', async () => {
+    // implement test4: Clicking on the first journal entry should update the header text to “Entry 1” 
+    const page_title = await page.$eval('h1', en => en.textContent);
+
+    expect(page_title).toBe("Entry 2");
+  });
 
 
   // define and implement test16: Verify the entry page contents is correct when clicking on the second entry
+  it('Test16: Verify the entry page contents is correct when clicking on the second entry', async () => {
 
+        const page_content = await page.$eval('entry-page', en => en.entry);
+        expect(page_content).toEqual({ 
+          title: 'Run, Forrest! Run!',
+          date: '4/26/2021',
+          content: "Mama always said life was like a box of chocolates. You never know what you're gonna get.",
+          image: {
+            src: 'https://s.abcnews.com/images/Entertainment/HT_forrest_gump_ml_140219_4x3_992.jpg',
+            alt: 'forrest running'
+          }});
+
+  }, 10000);
 
   // create your own test 17
+  it('Test17: Clicking the back button, new URL should be home page', async() => {
+    await page.goBack();
+    const url_ = page.url();
+
+    expect(url_).toBe('http://127.0.0.1:5500/');
+  });
+
 
   // create your own test 18
+  it('Test18: Verify the url is correct when clicking on the third entry', async () => {
+    
+    const entry = await page.$$('journal-entry');
+    await entry[2].click();
+    await page.waitForNavigation();
+    const url_ = await page.url();  
 
-  // create your own test 19
 
-  // create your own test 20
+    expect(url_).toBe('http://127.0.0.1:5500/#entry3');
+  });
+
+
+  it('Test19: Verify the title is current when clicking on the second entry', async () => {
+    const page_title = await page.$eval('h1', en => en.textContent);
+
+    expect(page_title).toBe("Entry 3");
+  });
+
+
+  it('Test20: Verify the entry page contents is correct when clicking on the second entry', async () => {
+
+        const page_content = await page.$eval('entry-page', en => en.entry);
+        expect(page_content).toEqual({ 
+          title: 'Ogres are like onions',
+          date: '4/27/2021',
+          content: "Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers.",
+          image: {
+            
+            src: 'https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.syracuse.com/home/syr-media/width2048/img/entertainment_impact/photo/shrek-donkeyjpg-daa31aa2b5bedfaa.jpg',
+            alt: 'shrek and donkey looking confused'
+          }});
+
+  }, 10000);
+
   
 });
