@@ -73,7 +73,7 @@ describe('Basic user flow for SPA ', () => {
 
   it('Test6: On first Entry page - checking <body> element classes', async () => {
     // implement test6: Clicking on the first journal entry should update the class attribute of <body> to ‘single-entry’
-    const classes = await page.$eval('body', en => en.classList[0]);
+    const classes = await page.$eval('body', en => en.className);
 
     expect(classes).toBe('single-entry');
   });
@@ -204,7 +204,6 @@ describe('Basic user flow for SPA ', () => {
           date: '4/27/2021',
           content: "Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers.",
           image: {
-            
             src: 'https://advancelocal-adapter-image-uploads.s3.amazonaws.com/image.syracuse.com/home/syr-media/width2048/img/entertainment_impact/photo/shrek-donkeyjpg-daa31aa2b5bedfaa.jpg',
             alt: 'shrek and donkey looking confused'
           }});
